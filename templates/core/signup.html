@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="signup">
+
+    
+    <form action="{% url 'signup' %}" method="post">
+        
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="formfield">
+            
+                <label for="#forminputtext">{{ field.label }}</label>
+                {{field}}
+            
+            </div>
+        {% endfor %}
+        
+        
+        <div>
+            <input type="submit" value="Signup">
+        </div>
+        <div class="alternative_auth">
+            <p>Already have an account?</p>
+            <a href="/login">Login</a>
+        </div>
+    </form>
+
+</div>
+{% endblock %}

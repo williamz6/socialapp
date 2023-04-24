@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="signin">
+
+    
+    <form action="" method="post">
+        
+        {% csrf_token %}
+        <label for="email">Email</label>
+        <input type="text" name="email" id="" placeholder="name@xyz.com">
+
+        <label for="password">Password</label>
+        <input type="password" name="password" id="">
+        
+        
+        <div>
+            <input type="submit" value="Signin">
+        </div>
+
+        <div class="alternate_auth">
+            <p>Don't have an account?</p>
+            <a href="/signup">Signup</a>
+        </div>
+    </form>
+
+</div>
+{% endblock %}

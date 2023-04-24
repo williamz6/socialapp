@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block content %}
+
+<div class="container m-auto">
+
+    <!--<h1 class="lg:text-2xl text-lg font-extrabold leading-none text-gray-900 tracking-tight mb-5"> Feed </h1>--->
+
+    <div class="lg:flex justify-center lg:space-x-10 lg:space-y-0 space-y-5">
+
+        <!-- left sidebar-->
+        <div class="space-y-5 flex-shrink-0 lg:w-7/12">
+            {% for post in posts %}
+            <!-- post 1-->
+            
+            <div class="bg-white shadow rounded-md  -mx-2 lg:mx-0">
+
+                <!-- post header-->                
+                    
+                <div class="flex justify-between items-center px-4 py-3">
+                    <div class="flex flex-1 items-center space-x-4">
+                        <a href="{% url 'user_profile' post.owner.username %}">
+                            <div class="bg-gradient-to-tr from-yellow-600 to-pink-600 p-0.5 rounded-full">  
+                                <img src="{{post.owner.imageURL}}  " class="bg-gray-200 border border-white rounded-full w-8 h-8">
+                            </div>
+                        </a>
+                        <span class="block capitalize font-semibold "> {{post.owner}} </span>
+                    </div>
+                  <div>
+                    <a href="#"> <i class="icon-feather-more-horizontal text-2xl hover:bg-gray-200 rounded-full p-2 transition -mr-1 "></i> </a>
+                    <div class="bg-white w-56 shadow-md mx-auto p-2 mt-12 rounded-md text-gray-500 hidden text-base border border-gray-100  " uk-drop="mode: hover;pos: top-right">
+                  
+                        <ul class="space-y-1">
+                          <li> 
+                              <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
+                               <i class="uil-share-alt mr-1"></i> Share
+                              </a> 
+                          </li>
+                          <li> 
+                              <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
+                               <i class="uil-edit-alt mr-1"></i>  Edit Post 
+                              </a> 
+                          </li>
+                          <li> 
+                              <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
+                               <i class="uil-comment-slash mr-1"></i>   Disable comments
+                              </a> 
+                          </li> 
+                          <li> 
+                              <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
+                               <i class="uil-favorite mr-1"></i>  Add favorites 
+                              </a> 
+                          </li>
+                          <li>
+                            <hr class="-mx-2 my-2 ">
+                          </li>
+                          <li> 
+                              <a href="#" class="flex items-center px-3 py-2 text-red-500 hover:bg-red-100 hover:text-red-500 rounded-md ">
+                               <i class="uil-trash-alt mr-1"></i>  Delete
+                              </a> 
+                          </li>
+                        </ul>
+                    
+                    </div>
+                  </div>
+                </div>
+
+                <div uk-lightbox>
+                    <a href="{{post.imageURL}}">  
+                        <img src="{{post.imageURL}}" alt="post">
+                    </a>
+                </div>
+                
+
+                <div class="py-3 px-4 space-y-3"> 
+                   <form action="{% url 'like_post' post.pk %}" method="post">
+                    {% csrf_token %}
+                    <div class="flex space-x-4 lg:font-bold">
+                        {% if request.user.id in post.likers %}
+                            <div class="flex items-center space-x-2">
+                                <button style="color: red;" class="custom-click" type="submit" name="post_id" value="{{post.id}}" ><i class="fa-regular fa-heart fa-1x"></i></button>                            
+                            </div>
+                        {% else %}
+                            <div class="flex items-center space-x-2">
+                                <button style="color: grey;" class="custom-click" type="submit" name="post_id" value="{{post.id}}" ><i class="fa-regular fa-heart fa-1x"></i></button>                            
+                            </div>
+                        {% endif %}
+                        
+                        <div class="flex items-center space-x-2">
+                            <button class="custom-click"><i class="fa-regular fa-envelope fa-1x"></i></button>
+                            
+                            
+                        </a>
+                        <a href="#" class="flex items-center space-x-2 flex-1 justify-end">
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="25" height="25" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16"><g fill="currentColor"><path d="M8.5 1.5A1.5 1.5 0 0 1 10 0h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h6c-.314.418-.5.937-.5 1.5v6h-2a.5.5 0 0 0-.354.854l2.5 2.5a.5.5 0 0 0 .708 0l2.5-2.5A.5.5 0 0 0 10.5 7.5h-2v-6z"/></g></svg>
+                            
+                        </a>
+                    </div>
+                </form>
+                    <div class="flex items-center space-x-3"> 
+                        <!-- <div class="flex items-center">
+                            <img src=" /avatars/avatar-1.jpg' %}" alt="" class="w-6 h-6 rounded-full border-2 border-white ">
+                            <img src=" /avatars/avatar-4.jpg' %}" alt="" class="w-6 h-6 rounded-full border-2 border-white  -ml-2">
+                            <img src="  " alt="" class="w-6 h-6 rounded-full border-2 border-white  -ml-2">
+                        </div> -->
+                        <!-- post likes -->
+                        <div>
+                            {{shortened}}
+
+                            
+                            <!-- Vote{{project.vote_total|pluralize:"s"}} -->
+                             <strong> {{post.likesCount}} like{{post.likesCount|pluralize:"s"}}</strong>
+                             <br>hhh
+                             <p>{{post.short_caption}}</p>
+                        </div>
+                    </div>
+<!-- post_comments -->
+                    <!-- <div class="border-t pt-4 space-y-4 ">
+                        <div class="flex">
+                            <div class="w-10 h-10 rounded-full relative flex-shrink-0">
+                                <img src=" /avatars/avatar-1.jpg' %}" alt="" class="absolute h-full rounded-full w-full">
+                            </div>
+                            <div class="text-gray-700 py-2 px-3 rounded-md bg-gray-100 h-full relative lg:ml-5 ml-2 lg:mr-20   ">
+                                <p class="leading-6">Y'all like billie eillish? <urna class="i uil-heart"></urna> <i
+                                        class="uil-grin-tongue-wink"> </i> </p>
+                                <div class="absolute w-3 h-3 top-3 -left-1 bg-gray-100 transform rotate-45 "></div>
+                            </div>
+                        </div>
+                        <div class="flex">
+                            <div class="w-10 h-10 rounded-full relative flex-shrink-0">
+                                <img src=" /avatars/avatar-1.jpg' %}" alt="" class="absolute h-full rounded-full w-full">
+                            </div>
+                            <div class="text-gray-700 py-2 px-3 rounded-md bg-gray-100 h-full relative lg:ml-5 ml-2 lg:mr-20   ">
+                                <p class="leading-6">She's my favourite <i class="uil-grin-tongue-wink-alt"></i>
+                                </p>
+                                <div class="absolute w-3 h-3 top-3 -left-1 bg-gray-100 transform rotate-45 "></div>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <div class="bg-gray-100 bg-gray-100 rounded-full rounded-md relative ">
+                        <input type="text" placeholder="post a comment" class="bg-transparent max-h-10 shadow-none">
+                        <div class="absolute bottom-0 flex h-full items-center right-0 right-3 text-xl space-x-2">
+                            <a href="#"> <i class="uil-heart"></i></a>
+                            <a href="#"> <i class="uil-video"></i></a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            {% endfor %}
+
+            <!-- post 2-->                       
+        
+           
+            <!-- Load more-->
+            <div class="flex justify-center mt-6" id="toggle" uk-toggle="target: #toggle ;animation: uk-animation-fade">
+                <a href="#"
+                    class="bg-white  font-semibold my-3 px-6 py-2 rounded-full shadow-md  ">
+                    Load more ..</a>
+            </div>
+
+
+        </div>
+
+        <!-- right sidebar-->
+        <div class="lg:w-5/12">
+
+            <div class="bg-white  shadow-md rounded-md overflow-hidden">
+
+                <div class="bg-gray-50  border-b border-gray-100 flex items-baseline justify-between py-4 px-6 ">
+                    <h2 class="font-semibold text-lg">Users You Can Follow</h2>
+                    <a href="#"> Refresh</a>
+                </div>
+               
+                <div class="divide-gray-300 divide-gray-50 divide-opacity-50 divide-y px-4 ">
+                    <div class="flex items-center justify-between py-3">
+                        <div class="flex flex-1 items-center space-x-4">
+                            <a href="profile.html">
+                                <img src="  " class="bg-gray-200 rounded-full w-10 h-10">
+                            </a>
+                            <div class="flex flex-col">
+                                <span class="block capitalize font-semibold"> tomi_ml </span>
+                                <span class="block capitalize text-sm"> 320k followers </span>
+                            </div>
+                        </div>
+                        
+                        <a href="#" class="border border-gray-200 font-semibold px-4 py-1 rounded-full hover:bg-pink-600 hover:text-white hover:border-pink-600 "> Follow </a>
+                    </div>
+                    <div class="flex items-center justify-between py-3">
+                        <div class="flex flex-1 items-center space-x-4">
+                            <a href="profile.html">
+                                <img src=" /avatars/avatar-1.jpg" class="bg-gray-200 rounded-full w-10 h-10">
+                            </a>
+                            <div class="flex flex-col">
+                                <span class="block capitalize font-semibold"> taiye </span>
+                                <span class="block capitalize text-sm"> New user </span>
+                            </div>
+                        </div>
+                        <a href="#" class="border border-gray-200 font-semibold px-4 py-1 rounded-full hover:bg-pink-600 hover:text-white hover:border-pink-600 "> Follow </a>
+                    </div>
+                    <div class="flex items-center justify-between py-3">
+                        <div class="flex flex-1 items-center space-x-4">
+                            <a href="profile.html">
+                                <img src=" /avatars/avatar-5.jpg " class="bg-gray-200 rounded-full w-10 h-10">
+                            </a>
+                            <div class="flex flex-col">
+                                <span class="block capitalize font-semibold"> kayode </span>
+                                <span class="block capitalize text-sm"> 20.7k followers </span>
+                            </div>
+                        </div>
+                        <a href="#" class="border border-gray-200 font-semibold px-4 py-1 rounded-full hover:bg-pink-600 hover:text-white hover:border-pink-600 "> Follow </a>
+                    </div>
+                    <div class="flex items-center justify-between py-3">
+                        <div class="flex flex-1 items-center space-x-4">
+                            <a href="profile.html">
+                                <img src=" /avatars/avatar-7.jpg" class="bg-gray-200 rounded-full w-10 h-10">
+                            </a>
+                            <div class="flex flex-col">
+                                <span class="block capitalize font-semibold"> faith_do </span>
+                                <span class="block capitalize text-sm"> 100.5k followers </span>
+                            </div>
+                        </div>
+                        
+                        <a href="#" class="border border-gray-200 font-semibold px-4 py-1 rounded-full hover:bg-pink-600 hover:text-white hover:border-pink-600 "> Follow </a>
+                    </div>
+
+                </div>
+
+            </div>
+
+          
+
+        </div>
+
+    </div>               
+
+
+</div>
+</div>
+</div>
+{% endblock content %}
+    
