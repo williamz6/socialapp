@@ -10,4 +10,4 @@ Retrieve: socialapp gives users the priviledge to retrieve data from the databas
 
 Update: Users will be able  to make changes on their profile and  make updates on their posts. Users needs to be logged in to make changes           on the platform.
 
-Delete: aUsers are able to delete their profile and posts.
+Delete: Users are able to delete their profile and posts.
