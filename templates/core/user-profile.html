@@ -1,4 +1,5 @@
 {% load static %}
+{% include 'partials\_messages.html' %}
 {% load humanize %}
 {% block content %}
   <link rel="stylesheet" href="{% static 'css/main.min.css' %}">
@@ -14,27 +15,27 @@
       <div class="add-btn">
       <span style="color: white; font-size: 27px;"><b><u><a href="/">Home</a></u></b></span>
       <span style="color: white; font-size: 27px;"><b>{{post_count}} post{{post_count|pluralize:"s"}}</b></span>
-      <span style="color: white; font-size: 27px;"><b>1.7m followers</b></span>
-      <span style="color: white; font-size: 27px;"><b>3.5k following</b></span>
-      <!-- <a href="" title="" data-ripple=""><button style="background-color: #ffc0cb; border: #ffc0cb;">Follow</button></a> -->
-      
-      {% if request.user != user %}
-      {{request.user}}
-      {{followers}}
-      
-      {% if request.user in followers %}
-        <form method="POST" action="{% url 'unfollow' username=user.username %}">
-          {% csrf_token %}
-          <button type="submit">Unfollow</button>
-        </form>
-      {% else %}
-        <form method="POST" action="{% url 'follow' username=user.username %}">
-          {% csrf_token %}
-          <button type="submit">Follow</button>
-        </form>
-      {% endif %}
-    {% endif %}
+      <span style="color: white; font-size: 27px;"><b>
         
+        {% with follower_count=profile.user.following.count  %}
+          {{follower_count}} follower{{follower_count|pluralize:"s"}}
+        {% endwith %}
+          
+      <span style="color: white; font-size: 27px;"><b>{{profile.user.followers.count}} following</b></span>
+      
+      {% if user != profile.user %}
+    {% if profile.user in user.followers.all %}
+        <form action="{% url 'unfollow' username=profile.username %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Unfollow</button>
+        </form>
+    {% else %}
+        <form action="{% url 'follow' username=profile.username %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Follow</button>
+        </form>
+    {% endif %}
+{% endif %}
       </div>
 
     <div class="container-fluid">
@@ -42,7 +43,7 @@
         <div class="col-lg-2 col-sm-3">
           <div class="user-avatar">
             <figure>
-              <img src="{{profile.imageURL}}" style="height: 250px; width: 100%;" alt="">
+              <img src="{{profile.imageURL}}"  alt="">
               <form class="edit-phto">
                 <i class="fa fa-camera-retro"></i>
                 <label class="fileContainer">
@@ -56,25 +57,9 @@
           <div class="timeline-info">
             <ul>
               <li class="admin-name">
-                <h5 style="color: black;white-space: nowrap; width: 110px; font-size: 27px;"><b>{{profile.username}}</b><!--<i class="fa fa-check-circle" style="color: #48dbfb;" aria-hidden="true"></i>--></h5>
+                <h5 style="color: black;white-space: nowrap; width: 110px; font-size: 27px; text-transform: uppercase;"><b>{{profile.username}}</b><!--<i class="fa fa-check-circle" style="color: #48dbfb;" aria-hidden="true"></i>--></h5>
                 <!--<span>Group Admin</span>-->
               </li>
-              <!--<li>
-                <a class="" href="javascript:void(0)" title="" data-ripple="">Go live!</a>
-                <a class="" href="javascript:void(0)" title="" data-ripple="">Music</a>
-                <a class="" href="emporium/index-3.html" title="" data-ripple="">Emporium</a>
-                <a class="" href="fitness/index.html" title="" data-ripple="">Health Inspection</a>
-                <a class="" href="settings/account-setting.html" title="" data-ripple="">Settings</a>
-                <a class="" href="javascript:void(0)" title="" data-ripple="">Upload</a>
-                <a class="" href="time-line.html" title="" data-ripple="">time line</a>
-                <a class="" href="timeline-photos.html" title="" data-ripple="">Photos</a>
-                <a class="" href="timeline-videos.html" title="" data-ripple="">Videos</a>
-                <a class="" href="timeline-friends.html" title="" data-ripple="">Friends</a>
-                <a class="" href="timeline-groups.html" title="" data-ripple="">Groups</a>
-                <a class="" href="about.html" title="" data-ripple="">about</a>
-                <a class="" href="#" title="" data-ripple="">more</a>
-
-              </li>-->
             </ul>
           </div>
         </div>
@@ -84,7 +69,15 @@
 </section><!-- top area -->
 <section>
   <div class="bio">
-    {{profile.bio}}
+    <p>{{profile.bio}}</p>
+    
+    {% for name in profile.user.following.all %}
+      {{name}}
+    {% endfor %}
+      
+    
+
+      
   </div>
 </section>
 

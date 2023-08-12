@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth.models import PermissionsMixin
 from django.utils import timezone
 from django.urls import reverse
@@ -49,6 +48,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff=models.BooleanField(default=False)
     is_active=models.BooleanField(default=True)
     is_superuser=models.BooleanField(default=False)
+    followers = models.ManyToManyField(
+        "self", blank=True, related_name="following", symmetrical=False
+    )
 
     # required fields
     date_joined= models.DateTimeField(default=timezone.now)
@@ -59,6 +61,19 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD= 'email'
     REQUIRED_FIELDS=['username','first_name', 'last_name']
+
+    @property
+    def profile(self):
+        return self._profile_cache if hasattr(self, '_profile_cache') else self._profile
+
+    @profile.setter
+    def profile(self, value):
+        if isinstance(value, Profile):
+            self._profile_cache = value
+            self._profile = None
+        else:
+            self._profile_cache = None
+            self._profile = value
 
     def __str__(self):
         return self.email
@@ -80,9 +95,11 @@ class Profile(models.Model):
     bio= models.CharField(max_length=200, default='', blank=True)
     location= models.CharField(max_length=100, blank=True)
     profileimg= models.ImageField(upload_to='user/', default='user-default.png')
-
+    
+    
     def __str__(self):
         return self.username
+
 
     @property
     def imageURL(self):
@@ -124,14 +141,5 @@ class Post(models.Model):
     def likers(self):
         return self.likes.values_list('id', flat=True)
     
-class Follow(models.Model):
-    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following')
-    followed = models.ForeignKey(User, on_delete=models.CASCADE, related_name='followers')
-    created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        unique_together = ('follower', 'followed')
-
-    def __str__(self):
-        return f'{self.follower} is following {self.followed}'
     

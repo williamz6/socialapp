@@ -1,5 +1,5 @@
-from .models import Post
-
+from .models import Post, Profile
+from django.db.models import Q
 
 def shorten_caption(sentence, max_length):
 	if len(sentence) <= max_length:
@@ -15,3 +15,15 @@ def shorten_caption(sentence, max_length):
 			else:
 				break
 		return ' '.join(shortened_words) + '...'
+	
+
+def searchProfiles(request):
+	search_query = ''
+	if request.GET.get('search_query'):
+		search_query= request.GET.get('search_query')
+
+	profiles= Profile.objects.distinct().filter(
+		Q(username__icontains=search_query) |
+		Q(bio__icontains=search_query) 
+	)
+	return profiles, search_query

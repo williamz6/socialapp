@@ -3,60 +3,600 @@
 {% load static %}
 {% block content %}
 
-<div class="container m-auto"> 
-
-    <h1 class="text-2xl leading-none text-gray-900 tracking-tight mt-3"><a href="{% url 'index' %}">Home</a>/ Account Setting for {{user.username}} </h1>
-    <!-- <ul class="mt-5 -mr-3 flex-nowrap lg:overflow-hidden overflow-x-scroll uk-tab">
-        <li class="uk-active"><a href="">General</a></li>
-        <li><a href="#">Profile</a></li>
-        <li><a href="#">Privacy</a></li>
-        <li><a href="#">Notification</a></li>
-        <li><a href="#">Social links</a></li>
-        <li><a href="#">Billing</a></li>
-        <li><a href="#">Security</a></li>
-    </ul> -->
-    <br>
-    <hr>
-        
-    <div class="grid lg:grid-cols-3 mt-12 gap-8">
-        <div>
-            <h3 class="text-xl mb-2"> General</h3>
-            <p></p>
-        </div>
-        
-            <div class="bg-white rounded-md lg:shadow-lg shadow col-span-2">
-                    <form action="" enctype="multipart/form-data" method="POST">
-                        {% csrf_token %}
-                        <div class="grid grid-cols-2 gap-3 lg:p-6 p-4 form-group">
-                        
-                            <div class="col-span-2">
-                                <label for="image">Profile Image</label>
-                                <img style=" width: 100px; height: 100px;" src="{{profile.imageURL}}" alt="">
-                                <input type="file" name="image" id="image" value="{{profile.imageURL}}">
-                            </div>
-                            <div class="col-span-2">
-                                <label for="bio">Bio</label>  
-                                <textarea id="bio" name="bio" rows="3"  class="shadow-none bg-gray-100 form-control">{{profile.bio}}</textarea>
-                            </div> 
-                            <div class="col-span-2">
-                                <label for="location"> Location</label>
-                                <input type="text" name="location" placeholder="" class="shadow-none bg-gray-100" value="{{profile.location}}">
-                            </div>
-                        </div> 
-        
-                        <div class="bg-gray-10 p-6 pt-0 flex justify-end space-x-3">
-                            <a href="{% url 'index' %}" class="p-2 px-4 rounded bg-gray-50 text-red-500"> Cancel </a>
-                            <button type="submit" class="button bg-blue-700"> Save </button>
-                        </div>
-                </form>
+<main class="profile my-md">
+    <div class="container">
+      <div class="layout">
+        <div class="column column--1of3">
+          <div class="card text-center shadow">
+            <div class="card__body dev">
+              <img
+                class="img-fluid"
+                src="{{profile.imageURL}}"
+              />
+              <h2 class="dev__name">{{profile.username}}</h2>
+              <p class="dev__location">Based in {{profile.location}}</p>                     
             </div>
-        
-        
-        <br>
+          </div>
+        </div>
+        <div class="column column--2of3">
+          <div class="devInfo">
+            <h3 class="devInfo__title">About Me</h3>
+            <p class="devInfo__about">{{profile.bio}}</p>
+          </div>
+          <div class="devInfo">
+            <h3 class="devInfo__title">Uploads</h3>
+            <div class="grid grid--two">
+                
+                {% for post in profile.post_set.all %}
+                <div class="column">
+                  <div class="card project shadow-md">
+                    <a href="{{post.imageURL}}" class="img-fluid">
+                      <img
+                        class="img-fluid"
+                        src="{{post.imageURL}}"
+                        alt="post thumbnail"
+                      />
+                      <div class="card__body text-center">
+                        <h6 class="small">{{post.caption}}</h6>
+                        <div class="row">
 
+                            <div class="col-auto">
+                                <form action="{% url 'like_post' post.pk %}" method="post">
+                                    {% csrf_token %}
+                                    <div class="bg-transparent ">
+                                        <div>
+                                            {% if request.user.id in post.likers %}
+                                            <button  class="nav-link custom-click border-0 bg-transparent text-danger " type="submit" name="post_id" value="{{post.id}}" ><i class="fa-regular fa-heart fa-1x"></i></button>                            
+                                            
+                                        {% else %}
+                                            <button class="nav-link custom-click text-secondary border-0 bg-transparent " type="submit" name="post_id" value="{{post.id}}" ><i class="fa-regular fa-heart fa-1x"></i>like</button>                            
+                                            
+                                        {% endif %}
+                                        
+                                        <p class=" small">
+                                            {{post.likesCount}} like{{post.likesCount|pluralize:"s"}}
+                                        </p>
+                                        </div>
+                                        
+                                        
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fa-regular fa-comment fa-1x text-secondary ">
+                            </div>
+                            <div class="col-auto">
+                                <a class="tag tag--pill tag--main settings__btn" href="{% url 'delete_post' post.pk %}?next=/account"><i class="fa-regular fa-remove fa-1x text-secondary"></i></a>
+                            </div>
+
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+                {% endfor %}
+                    
+              
+  
+              
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </main>
 
-</div>
+<style>
+    
+    .comment-wrap .comment-item {
+      position: relative;
+    }
+    .comment-wrap .comment-item .avatar {
+      position: relative;
+      z-index: 1;
+    }
+    .comment-wrap .comment-item:last-child .comment-line-inner {
+      background: var(--bs-light);
+      height: 20px;
+    }
+    .comment-wrap .comment-item-nested {
+      padding-left: 2.75rem;
+    }
+    .comment-wrap > .comment-item .comment-line-inner {
+      position: absolute;
+      left: 16px;
+      top: 0;
+      width: 2px;
+      background-color: var(--bs-light);
+      height: 100%;
+    }
+    
+    .comment-item-nested .comment-item {
+      position: relative;
+    }
+    .comment-item-nested .comment-item .comment-line-inner {
+      position: absolute;
+      left: -28px;
+      top: 0;
+      width: 2px;
+      background-color: var(--bs-light);
+      height: 100%;
+    }
+    .comment-item-nested .comment-item .comment-line-inner:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 20px;
+      height: 2px;
+      width: 26px;
+      background: var(--bs-light);
+    }
+    
+    @media (min-width: 992px) {
+      .rounded-end-lg-0 {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+      .rounded-start-lg-0 {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+      .border-end-lg-0 {
+        border-right: 0;
+      }
+    }
+    .rounded-top-0 {
+      border-top-left-radius: 0 !important;
+      border-top-right-radius: 0 !important;
+    }
+    
+    .rounded-bottom-0 {
+      border-bottom-left-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+    }
+    
+    .flip-horizontal {
+      -webkit-transform: scaleX(-1);
+              transform: scaleX(-1);
+      display: inline-block;
+    }
+    
+    .timeline {
+      width: 100%;
+    }
+    .timeline .timeline-item {
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      width: 100%;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    .timeline .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+    .timeline .timeline-item .timeline-icon {
+      margin-right: 0.8rem;
+      position: relative;
+      position: relative;
+    }
+    .timeline .timeline-item .timeline-content {
+      width: 100%;
+    }
+    .timeline .timeline-item:before {
+      content: "";
+      position: absolute;
+      width: 2px;
+      height: calc(100% - 1rem);
+      background-color: var(--bs-light);
+      top: 2.5rem;
+      left: 1.5rem;
+      -webkit-transform: translatex(-50%);
+              transform: translatex(-50%);
+    }
+    .timeline .timeline-item:last-child:before {
+      height: calc(100% - 2.5rem);
+    }
+    
+    @media (min-width: 992px) {
+      .card-chat {
+        height: calc(100vh - 5.1125rem - 1.5rem);
+      }
+      .card-chat-list {
+        height: calc(100vh - 10.112rem - 1.5rem);
+      }
+      .chat-conversation-content {
+        height: calc(100% - 5.25rem);
+      }
+      .chat-tab-list {
+        height: calc(100% - 0.75rem);
+      }
+    }
+    .typing .dot {
+      -webkit-animation: TypingAnimation 1.8s infinite ease-in-out;
+              animation: TypingAnimation 1.8s infinite ease-in-out;
+      background-color: rgba(var(--bs-secondary-rgb), 0.7);
+      border-radius: 50%;
+      height: 7px;
+      margin-right: 4px;
+      vertical-align: middle;
+      width: 7px;
+      display: inline-block;
+    }
+    .typing .dot:nth-child(1) {
+      -webkit-animation-delay: 200ms;
+              animation-delay: 200ms;
+    }
+    .typing .dot:nth-child(2) {
+      -webkit-animation-delay: 300ms;
+              animation-delay: 300ms;
+    }
+    .typing .dot:nth-child(3) {
+      -webkit-animation-delay: 400ms;
+              animation-delay: 400ms;
+    }
+    .typing .dot:last-child {
+      margin-right: 0;
+    }
+    
+    @-webkit-keyframes TypingAnimation {
+      0% {
+        -webkit-transform: translateY(0px);
+                transform: translateY(0px);
+        background-color: rgba(var(--bs-secondary-rgb), 0.7);
+      }
+      28% {
+        -webkit-transform: translateY(-7px);
+                transform: translateY(-7px);
+        background-color: rgba(var(--bs-secondary-rgb), 0.4);
+      }
+      44% {
+        -webkit-transform: translateY(0px);
+                transform: translateY(0px);
+        background-color: rgba(var(--bs-secondary-rgb), 0.2);
+      }
+    }
+    
+    @keyframes TypingAnimation {
+      0% {
+        -webkit-transform: translateY(0px);
+                transform: translateY(0px);
+        background-color: rgba(var(--bs-secondary-rgb), 0.7);
+      }
+      28% {
+        -webkit-transform: translateY(-7px);
+                transform: translateY(-7px);
+        background-color: rgba(var(--bs-secondary-rgb), 0.4);
+      }
+      44% {
+        -webkit-transform: translateY(0px);
+                transform: translateY(0px);
+        background-color: rgba(var(--bs-secondary-rgb), 0.2);
+      }
+    }
+    .bi::before,
+    [class^=bi-]::before,
+    [class*=" bi-"]::before {
+      line-height: 1.5;
+    }
+    
+    .fakepasswordicon {
+      height: 100%;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-pack: center;
+          -ms-flex-pack: center;
+              justify-content: center;
+      -webkit-box-align: center;
+          -ms-flex-align: center;
+              align-items: center;
+      cursor: pointer;
+    }
+    
+    .fakepasswordicon.fa-eye:before {
+      content: "\f06e" !important;
+    }
+    
+    .ticket-border {
+      border-left: 2px dashed var(--bs-gray-900);
+      padding-left: 50px;
+      position: relative;
+    }
+    .ticket-border:before {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #fff;
+      content: "";
+      top: -50px;
+      left: -25px;
+      position: absolute;
+    }
+    .ticket-border:after {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #fff;
+      content: "";
+      bottom: -50px;
+      left: -25px;
+      position: absolute;
+    }
+    
+    @media (max-width: 575.98px) {
+      .ticket-border {
+        padding-left: 0;
+        border: 0;
+      }
+      .ticket-border:after, .ticket-border:before {
+        display: none;
+      }
+    }
+    .plyr--audio .plyr__controls {
+      background: transparent;
+    }
+    
+    .plyr--audio .plyr__control.plyr__tab-focus, .plyr--audio .plyr__control:hover, .plyr--audio .plyr__control[aria-expanded=true] {
+      background: var(--bs-primary);
+    }
+    
+    [data-autoresize] {
+      resize: none;
+    }
+    
+    .tooltip-text-start .tooltip-inner {
+      text-align: left;
+    }
+    
+    [class*=status-]:before {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      border-radius: 100%;
+      border: 2px solid #fff;
+      height: 12px;
+      width: 12px;
+      right: -2px;
+      top: -2px;
+    }
+    
+    .status-online:before {
+      background-color: #0cbc87;
+    }
+    
+    .status-away:before {
+      background-color: #f7c32e;
+    }
+    
+    .status-offline:before {
+      background-color: #d6293e;
+    }
+    
+    .avatar.avatar-lg[class*=status-]:before {
+      right: 2px;
+      top: 2px;
+    }
+    
+    .avatar.avatar-xl[class*=status-]:before {
+      right: 4px;
+      top: 4px;
+    }
+    
+    .avatar.avatar-xxl[class*=status-]:before {
+      right: 12px;
+      top: 12px;
+    }
+    
+    .avatar.avatar-xxxl[class*=status-]:before {
+      right: 18px;
+      top: 18px;
+    }
+    
+    .avatar {
+      height: 3rem;
+      width: 3rem;
+      position: relative;
+      display: inline-block;
+      -ms-flex-negative: 0 !important;
+          flex-shrink: 0 !important;
+    }
+    
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      -o-object-fit: cover;
+         object-fit: cover;
+    }
+    
+    .avatar-group {
+      padding: 0;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+    }
+    .avatar-group > li {
+      position: relative;
+    }
+    .avatar-group > li:not(:last-child) {
+      margin-right: -0.8rem;
+    }
+    .avatar-group .avatar-img {
+      border: 2px solid #fff;
+    }
+    
+    .avatar-group-two {
+      display: -webkit-inline-box;
+      display: -ms-inline-flexbox;
+      display: inline-flex;
+      padding: 0;
+    }
+    .avatar-group-two > li {
+      margin-top: 0.8rem;
+      position: relative;
+    }
+    .avatar-group-two > li:not(:last-child) {
+      margin-right: -1.2rem;
+      margin-top: 0;
+    }
+    
+    .avatar-group-three {
+      display: -webkit-inline-box;
+      display: -ms-inline-flexbox;
+      display: inline-flex;
+      padding: 0;
+      padding-right: 1.2rem;
+      position: relative;
+    }
+    .avatar-group-three > li {
+      position: relative;
+    }
+    .avatar-group-three > li:not(:last-child) {
+      margin-right: -1.2rem;
+    }
+    .avatar-group-three > li:last-child {
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      top: 0;
+      -webkit-transform: translate(-50%, 50%);
+              transform: translate(-50%, 50%);
+    }
+    
+    .avatar-group-four {
+      display: inline-grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      grid-template-columns: auto auto;
+      gap: 0px 0px;
+    }
+    .avatar-group-four li {
+      margin: 0;
+    }
+    .avatar-group-four li:not(:last-child) {
+      margin: 0;
+    }
+    
+    .avatar-xxs {
+      height: 1.5rem;
+      width: 1.5rem;
+    }
+    
+    .avatar-xs {
+      height: 2.1875rem;
+      width: 2.1875rem;
+    }
+    
+    .avatar-sm {
+      height: 2.5rem;
+      width: 2.5rem;
+    }
+    
+    .avatar-lg {
+      height: 4rem;
+      width: 4rem;
+    }
+    
+    .avatar-xl {
+      height: 5.125rem;
+      width: 5.125rem;
+    }
+    
+    .avatar-xxl {
+      height: 5.125rem;
+      width: 5.125rem;
+    }
+    @media (min-width: 768px) {
+      .avatar-xxl {
+        width: 8rem;
+        height: 8rem;
+      }
+    }
+    
+    .avatar-xxxl {
+      height: 8rem;
+      width: 8rem;
+    }
+    @media (min-width: 768px) {
+      .avatar-xxxl {
+        width: 11rem;
+        height: 11rem;
+      }
+    }
+    
+    .avatar-story {
+      position: relative;
+      padding: 4px;
+      z-index: 1;
+    }
+    .avatar-story:after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      border-radius: 50%;
+      border: 2px solid var(--bs-primary);
+      z-index: -1;
+    }
+    
+    .avatar-uploader {
+      position: relative;
+    }
+    .avatar-uploader .avatar-edit {
+      position: absolute;
+      right: 0;
+      z-index: 1;
+      top: 0;
+    }
+    .avatar-uploader .avatar-edit input {
+      display: none;
+    }
+    .avatar-uploader .avatar-edit input + label {
+      display: inline-block;
+      width: 34px;
+      height: 34px;
+      margin-bottom: 0;
+      border-radius: 100%;
+      background: #eff2f6;
+      border: 1px solid transparent;
+      -webkit-box-shadow: 0px 0px 20px rgba(93, 83, 84, 0.15);
+              box-shadow: 0px 0px 20px rgba(93, 83, 84, 0.15);
+      cursor: pointer;
+      font-weight: normal;
+      -webkit-transition: all 0.3s ease-in-out;
+      transition: all 0.3s ease-in-out;
+    }
+    .avatar-uploader .avatar-edit input + label:after {
+      content: "\f303";
+      font-family: "Font Awesome 6 Free";
+      color: #14191e;
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-weight: 900;
+      -webkit-transform: translate(0, -56%);
+              transform: translate(0, -56%);
+      margin: 0 auto;
+      -webkit-transition: all 0.3s ease-in-out;
+      transition: all 0.3s ease-in-out;
+    }
+    .avatar-uploader .avatar-edit input + label:hover {
+      background: var(--bs-primary);
+      border-color: var(--bs-primary);
+    }
+    .avatar-uploader .avatar-edit input + label:hover:after {
+      color: #fff;
+    }
+    .avatar-uploader img#avatar-preview {
+      -o-object-fit: cover;
+         object-fit: cover;
+    }
+    
+    </style>
 
 {% endblock %}
     

@@ -2,243 +2,829 @@
 {% load humanize %}
 {% block content %}
 
-<div class="container m-auto">
+<div class="container">
+<!-- 
 
-    <!--<h1 class="lg:text-2xl text-lg font-extrabold leading-none text-gray-900 tracking-tight mb-5"> Feed </h1>--->
-
-    <div class="lg:flex justify-center lg:space-x-10 lg:space-y-0 space-y-5">
-
-        <!-- left sidebar-->
-        <div class="space-y-5 flex-shrink-0 lg:w-7/12">
-            {% for post in posts %}
-            <!-- post 1-->
-            
-            <div class="bg-white shadow rounded-md  -mx-2 lg:mx-0">
-
-                <!-- post header-->                
-                    
-                <div class="flex justify-between items-center px-4 py-3">
-                    <div class="flex flex-1 items-center space-x-4">
-                        <a href="{% url 'user_profile' post.owner.username %}">
-                            <div class="bg-gradient-to-tr from-yellow-600 to-pink-600 p-0.5 rounded-full">  
-                                <img src="{{post.owner.imageURL}}  " class="bg-gray-200 border border-white rounded-full w-8 h-8">
-                            </div>
-                        </a>
-                        <span class="block capitalize font-semibold "> {{post.owner}} </span>
-                    </div>
-                  <div>
-                    <a href="#"> <i class="icon-feather-more-horizontal text-2xl hover:bg-gray-200 rounded-full p-2 transition -mr-1 "></i> </a>
-                    <div class="bg-white w-56 shadow-md mx-auto p-2 mt-12 rounded-md text-gray-500 hidden text-base border border-gray-100  " uk-drop="mode: hover;pos: top-right">
-                  
-                        <ul class="space-y-1">
-                          <li> 
-                              <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
-                               <i class="uil-share-alt mr-1"></i> Share
-                              </a> 
-                          </li>
-                          <li> 
-                              <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
-                               <i class="uil-edit-alt mr-1"></i>  Edit Post 
-                              </a> 
-                          </li>
-                          <li> 
-                              <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
-                               <i class="uil-comment-slash mr-1"></i>   Disable comments
-                              </a> 
-                          </li> 
-                          <li> 
-                              <a href="#" class="flex items-center px-3 py-2 hover:bg-gray-200 hover:text-gray-800 rounded-md ">
-                               <i class="uil-favorite mr-1"></i>  Add favorites 
-                              </a> 
-                          </li>
-                          <li>
-                            <hr class="-mx-2 my-2 ">
-                          </li>
-                          <li> 
-                              <a href="#" class="flex items-center px-3 py-2 text-red-500 hover:bg-red-100 hover:text-red-500 rounded-md ">
-                               <i class="uil-trash-alt mr-1"></i>  Delete
-                              </a> 
-                          </li>
-                        </ul>
-                    
-                    </div>
-                  </div>
-                </div>
-
-                <div uk-lightbox>
-                    <a href="{{post.imageURL}}">  
-                        <img src="{{post.imageURL}}" alt="post">
-                    </a>
-                </div>
-                
-
-                <div class="py-3 px-4 space-y-3"> 
-                   <form action="{% url 'like_post' post.pk %}" method="post">
-                    {% csrf_token %}
-                    <div class="flex space-x-4 lg:font-bold">
-                        {% if request.user.id in post.likers %}
-                            <div class="flex items-center space-x-2">
-                                <button style="color: red;" class="custom-click" type="submit" name="post_id" value="{{post.id}}" ><i class="fa-regular fa-heart fa-1x"></i></button>                            
-                            </div>
-                        {% else %}
-                            <div class="flex items-center space-x-2">
-                                <button style="color: grey;" class="custom-click" type="submit" name="post_id" value="{{post.id}}" ><i class="fa-regular fa-heart fa-1x"></i></button>                            
-                            </div>
-                        {% endif %}
-                        
-                        <div class="flex items-center space-x-2">
-                            <button class="custom-click"><i class="fa-regular fa-envelope fa-1x"></i></button>
-                            
-                            
-                        </a>
-                        <a href="#" class="flex items-center space-x-2 flex-1 justify-end">
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="25" height="25" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16"><g fill="currentColor"><path d="M8.5 1.5A1.5 1.5 0 0 1 10 0h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h6c-.314.418-.5.937-.5 1.5v6h-2a.5.5 0 0 0-.354.854l2.5 2.5a.5.5 0 0 0 .708 0l2.5-2.5A.5.5 0 0 0 10.5 7.5h-2v-6z"/></g></svg>
-                            
-                        </a>
-                    </div>
-                </form>
-                    <div class="flex items-center space-x-3"> 
-                        <!-- <div class="flex items-center">
-                            <img src=" /avatars/avatar-1.jpg' %}" alt="" class="w-6 h-6 rounded-full border-2 border-white ">
-                            <img src=" /avatars/avatar-4.jpg' %}" alt="" class="w-6 h-6 rounded-full border-2 border-white  -ml-2">
-                            <img src="  " alt="" class="w-6 h-6 rounded-full border-2 border-white  -ml-2">
-                        </div> -->
-                        <!-- post likes -->
-                        <div>
-                            {{shortened}}
-
-                            
-                            <!-- Vote{{project.vote_total|pluralize:"s"}} -->
-                             <strong> {{post.likesCount}} like{{post.likesCount|pluralize:"s"}}</strong>
-                             <br>hhh
-                             <p>{{post.short_caption}}</p>
-                        </div>
-                    </div>
-<!-- post_comments -->
-                    <!-- <div class="border-t pt-4 space-y-4 ">
-                        <div class="flex">
-                            <div class="w-10 h-10 rounded-full relative flex-shrink-0">
-                                <img src=" /avatars/avatar-1.jpg' %}" alt="" class="absolute h-full rounded-full w-full">
-                            </div>
-                            <div class="text-gray-700 py-2 px-3 rounded-md bg-gray-100 h-full relative lg:ml-5 ml-2 lg:mr-20   ">
-                                <p class="leading-6">Y'all like billie eillish? <urna class="i uil-heart"></urna> <i
-                                        class="uil-grin-tongue-wink"> </i> </p>
-                                <div class="absolute w-3 h-3 top-3 -left-1 bg-gray-100 transform rotate-45 "></div>
-                            </div>
-                        </div>
-                        <div class="flex">
-                            <div class="w-10 h-10 rounded-full relative flex-shrink-0">
-                                <img src=" /avatars/avatar-1.jpg' %}" alt="" class="absolute h-full rounded-full w-full">
-                            </div>
-                            <div class="text-gray-700 py-2 px-3 rounded-md bg-gray-100 h-full relative lg:ml-5 ml-2 lg:mr-20   ">
-                                <p class="leading-6">She's my favourite <i class="uil-grin-tongue-wink-alt"></i>
-                                </p>
-                                <div class="absolute w-3 h-3 top-3 -left-1 bg-gray-100 transform rotate-45 "></div>
-                            </div>
-                        </div>
-                    </div> -->
-
-                    <div class="bg-gray-100 bg-gray-100 rounded-full rounded-md relative ">
-                        <input type="text" placeholder="post a comment" class="bg-transparent max-h-10 shadow-none">
-                        <div class="absolute bottom-0 flex h-full items-center right-0 right-3 text-xl space-x-2">
-                            <a href="#"> <i class="uil-heart"></i></a>
-                            <a href="#"> <i class="uil-video"></i></a>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-            {% endfor %}
-
-            <!-- post 2-->                       
-        
-           
-            <!-- Load more-->
-            <div class="flex justify-center mt-6" id="toggle" uk-toggle="target: #toggle ;animation: uk-animation-fade">
-                <a href="#"
-                    class="bg-white  font-semibold my-3 px-6 py-2 rounded-full shadow-md  ">
-                    Load more ..</a>
-            </div>
-
-
+  <ul class="navbar-nav ">
+                  <form class="d-flex" role="search" method="get">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search_query" value="{{search_query}}">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                  </form>
+               </ul>
+ -->
+ <!-- Search Users -->
+ <section class="hero-section text-center">
+  <div class="container">
+    <div class="hero-section__search">
+      <form id="searchForm" class="form" action="{% url 'profiles' %}" method="get">
+        <div class="form__field">
+          <label for="formInput#search" class="font-semibold font-size-14 lead">Search By Username </label>
+          <input class="input input--text" type="search" placeholder="Search" aria-label="Search" name="search_query" value="{{search_query}}">
+          <button class="btn btn-success btn-sm my-3" type="submit">Search</button>
         </div>
 
-        <!-- right sidebar-->
-        <div class="lg:w-5/12">
+       
+      </form>
+    </div>
+  </div>
+</section>
+  
+  {% if posts %}
 
-            <div class="bg-white  shadow-md rounded-md overflow-hidden">
-
-                <div class="bg-gray-50  border-b border-gray-100 flex items-baseline justify-between py-4 px-6 ">
-                    <h2 class="font-semibold text-lg">Users You Can Follow</h2>
-                    <a href="#"> Refresh</a>
-                </div>
-               
-                <div class="divide-gray-300 divide-gray-50 divide-opacity-50 divide-y px-4 ">
-                    <div class="flex items-center justify-between py-3">
-                        <div class="flex flex-1 items-center space-x-4">
-                            <a href="profile.html">
-                                <img src="  " class="bg-gray-200 rounded-full w-10 h-10">
-                            </a>
-                            <div class="flex flex-col">
-                                <span class="block capitalize font-semibold"> tomi_ml </span>
-                                <span class="block capitalize text-sm"> 320k followers </span>
-                            </div>
-                        </div>
-                        
-                        <a href="#" class="border border-gray-200 font-semibold px-4 py-1 rounded-full hover:bg-pink-600 hover:text-white hover:border-pink-600 "> Follow </a>
-                    </div>
-                    <div class="flex items-center justify-between py-3">
-                        <div class="flex flex-1 items-center space-x-4">
-                            <a href="profile.html">
-                                <img src=" /avatars/avatar-1.jpg" class="bg-gray-200 rounded-full w-10 h-10">
-                            </a>
-                            <div class="flex flex-col">
-                                <span class="block capitalize font-semibold"> taiye </span>
-                                <span class="block capitalize text-sm"> New user </span>
-                            </div>
-                        </div>
-                        <a href="#" class="border border-gray-200 font-semibold px-4 py-1 rounded-full hover:bg-pink-600 hover:text-white hover:border-pink-600 "> Follow </a>
-                    </div>
-                    <div class="flex items-center justify-between py-3">
-                        <div class="flex flex-1 items-center space-x-4">
-                            <a href="profile.html">
-                                <img src=" /avatars/avatar-5.jpg " class="bg-gray-200 rounded-full w-10 h-10">
-                            </a>
-                            <div class="flex flex-col">
-                                <span class="block capitalize font-semibold"> kayode </span>
-                                <span class="block capitalize text-sm"> 20.7k followers </span>
-                            </div>
-                        </div>
-                        <a href="#" class="border border-gray-200 font-semibold px-4 py-1 rounded-full hover:bg-pink-600 hover:text-white hover:border-pink-600 "> Follow </a>
-                    </div>
-                    <div class="flex items-center justify-between py-3">
-                        <div class="flex flex-1 items-center space-x-4">
-                            <a href="profile.html">
-                                <img src=" /avatars/avatar-7.jpg" class="bg-gray-200 rounded-full w-10 h-10">
-                            </a>
-                            <div class="flex flex-col">
-                                <span class="block capitalize font-semibold"> faith_do </span>
-                                <span class="block capitalize text-sm"> 100.5k followers </span>
-                            </div>
-                        </div>
-                        
-                        <a href="#" class="border border-gray-200 font-semibold px-4 py-1 rounded-full hover:bg-pink-600 hover:text-white hover:border-pink-600 "> Follow </a>
-                    </div>
-
-                </div>
-
-            </div>
-
+    <div class="row">
+      <div class="col-md-8">
+          {% for post in posts %}
+          <!-- post 1-->
           
+          <div class="">
 
+              <div class="card mb-3 border-0 shadow-sm rounded mb-5 bg-white">
+        <!-- Card header START -->
+        <div class="card-header bg-white border-0 pb-0 ">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+              <!-- Avatar -->
+              <div>
+                <a href="{% url 'user_profile' post.owner.username %}" class="link-offset-2 link-underline link-underline-opacity-0 link-dark link"> <img class="avatar avatar--md " src="{{post.owner.imageURL}}" alt=""> </a>
+              </div>
+              <!-- Info -->
+              <div>
+                <div class="nav nav-divider">
+                  <h6 class="nav-item card-title mb-0"> <a href="{% url 'user_profile' post.owner.username %}" class="link-offset-2 link-underline link-underline-opacity-0 link-dark"> {{post.owner}}</a></h6>
+                  <span class="nav-item small px-2"> 2hr</span>
+                </div>
+                <!-- <p class="mb-0 small">Web Developer at Webestica</p> -->
+              </div>
+            </div>
+            <!-- Card feed action dropdown START -->
+            <div class="dropdown">
+              <a href="#" class="text-secondary btn btn-secondary-soft-hover bg-white" role="button" data-bs-toggle="dropdown"  aria-expanded="false">
+                <i class=" fa fa-ellipsis-h fa-1x"></i>
+              </a>
+              <!-- Card feed action dropdown menu -->
+              <ul class=" dropdown-menu dropdown-menu-end ">
+                <li><a class="dropdown-item" href="#"> <i class="fa-sharp fa-regular fa-bookmark px-1"></i>Save post</a></li>
+                <li><a class="dropdown-item" href="#"> <i class="fa-sharp fa-regular fa-person-circle-xmark px-1"></i>Unfollow {{post.owner.username}} </a></li>
+                <li><a class="dropdown-item" href="#"> <i class="fa-sharp fa-regular fa-circle-xmark  px-1"></i>Hide post</a></li>
+                <li><a class="dropdown-item" href="#"> <i class="fa-sharp fa-regular fa fa-user-slash px-1"></i>Block</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#"> <i class="fa-sharp fa-regular fa-flag px-1"></i>Report post</a></li>
+              </ul>
+            </div>
+            <!-- Card feed action dropdown END -->
+          </div>
         </div>
+        <!-- Card header END -->
+        <!-- Card body START -->
+        <div class="card-body"> 
+          <!-- Card img -->
+                      <div class="text-center">
+                          <div uk-lightbox>
+                              <a href="{{post.imageURL}}"> 
+                                  <img class="img-fluid w-75 h-75" src="{{post.imageURL}}" alt="post">
+                              </a>
+                          </div>
+                      </div>
+          
+          <!-- Feed react START -->
+          <ul class="nav nav-stack py-3 small">
+            <li class="nav-item">
+                              <form action="{% url 'like_post' post.pk %}" method="post">
+                                  {% csrf_token %}
+                                  <div class="bg-transparent ">
+                                      <div>
+                                          {% if request.user.id in post.likers %}
+                                          <button  class="nav-link custom-click border-0 bg-transparent text-danger " type="submit" name="post_id" value="{{post.id}}" ><i class="fa-regular fa-heart fa-1x"></i></button>                            
+                                          
+                                      {% else %}
+                                          <button class="nav-link custom-click text-secondary border-0 bg-transparent " type="submit" name="post_id" value="{{post.id}}" ><i class="fa-regular fa-heart fa-1x"></i>like</button>                            
+                                          
+                                      {% endif %}
+                                      </div>
+                                      <div class=" nav-link">
+                                          {{post.likesCount}} like{{post.likesCount|pluralize:"s"}}
+                                      </div>
+                                      
+                                  </div>
+                              </form>
+              
+            </li>
+            <li class="nav-item">
+              <!-- <a class="nav-link" href="#!" type="button"> <i class="fa-regular fa-comment fa-1x "></i>Comments (12)</a> -->
+                              <button  class="nav-link custom-click border-0 bg-transparent text-secondary " type="submit" name="post_id" value="{{post.id}}" ><i class="fa-regular fa-comment fa-1x "></i> Comments</button>
+            </li>
+            <!-- Card share action START -->
+            <li class="nav-item dropdown">
+                              <a class="nav-link dropdown-toggle text-secondary" href="#" id="cardShareAction" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa-regular fa-share fa-1x"></i>
+                              </a>
+              <!-- Card share action dropdown menu -->
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardShareAction">
+                <li><a class="dropdown-item" href="#"> <i class="bi bi-envelope fa-fw pe-2"></i>Send via Direct Message</a></li>
+                <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark-check fa-fw pe-2"></i>Bookmark </a></li>
+                <li><a class="dropdown-item" href="#"> <i class="bi bi-link fa-fw pe-2"></i>Copy link to post</a></li>
+                <li><a class="dropdown-item" href="#"> <i class="bi bi-share fa-fw pe-2"></i>Share post via …</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="#"> <i class="bi bi-pencil-square fa-fw pe-2"></i>Share to News Feed</a></li>
+              </ul>
+            </li>
+            <!-- Card share action END -->
+          </ul>
+          <!-- Feed react END -->
 
-    </div>               
+          <!-- Add comment -->
+          <div class="d-flex mb-3">
+            
+            <!-- Comment box  -->
+            <form class="nav nav-item w-100 position-relative">
+              <textarea data-autoresize class="form-control pe-5 fs-5" rows="1" placeholder="Add a comment..."></textarea>
+              <button class="nav-link bg-transparent px-3 position-absolute top-50 end-0 translate-middle-y border-0" type="submit">
+                <i class="bi bi-send-fill"> </i>
+              </button>
+            </form>
+          </div>
+        </div>
+        <!-- Card body END -->
+        <!-- Card footer START -->
+        <div class="card-footer border-0 pt-0">
+                      <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center my-2">
+                              <p>{{post.caption}}</p>
+                          </div>
+                      </div>
+          
+        </div>
+        <!-- Card footer END -->
+      </div>
+      <!-- Card feed item END -->
+
+              
+
+          </div>
+          {% endfor %}
+      </div>
+      <div class="col-md-4">
+
+
+  
+          <div class="shadow-sm p-3 mb-5 bg-white rounded">
+      
+              <div class="bg-gray-50  border-b border-gray-100 flex items-baseline justify-between py-4 px-6 ">
+                  <h6 class="font-semibold text-sm">Users You Can Follow</h6>
+                  <a href="/" class="text-sm"> Refresh</a>
+              </div>
+              
+                
+             
+            
+              <div class="divide-gray-300 divide-gray-50 divide-opacity-50 divide-y px-4 ">
+                {% for su in suggestions %}
+                  <div class="flex items-center justify-between py-3">
+                      <div class="flex flex-1 items-center space-x-4">
+                          <a href="profile.html">
+                              <img src="  " class="bg-gray-200 rounded-full w-10 h-10">
+                          </a>
+                          <div class="flex flex-col">
+                              <span class="block capitalize fw-semibold"> {{su.username}} </span>
+                              
+                              <span class="block capitalize fs-5"> {{su.user.following.count}} followers </span>
+                          </div>
+                      </div>
+                      <form action="{% url 'follow' username=su.username %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-success btn-sm my-3" type="submit">Follow</button>
+                    </form>
+                     
+                  </div>
+                  {% endfor %}
+              </div>
+      
+          </div>
+      
+        
+      
+      </div>
+  </div>
+    
+  {% endif %}
+    
+  
+
+   
+<!-- right sidebar-->
+            
 
 
 </div>
-</div>
-</div>
+
+<style>
+ /*=======================
+  Hero Section
+========================*/
+
+.hero-section {
+  height: 40vh;
+  display: flex;
+  align-items: center;
+}
+
+.hero-section__box {
+  margin-bottom: 4rem;
+}
+
+.hero-section__box > h2,
+.hero-section__box > h2 > span {
+  font-size: 4rem;
+  color: var(--color-light);
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+@media screen and (max-width: 1000px) {
+  .hero-section__box > h2,
+  .hero-section__box > h2 > span {
+    font-size: 3.4rem;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .hero-section__box > h2,
+  .hero-section__box > h2 > span {
+    font-size: 3rem;
+    line-height: 1.5;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .hero-section__box > h2,
+  .hero-section__box > h2 > span {
+    font-size: 2.4rem;
+    line-height: 1.5;
+  }
+  
+}
+
+@media screen and (max-width: 400px) {
+  .hero-section__box > h2,
+  .hero-section__box > h2 > span {
+    font-size: 2rem;
+  }
+}
+
+
+.hero-section__box > h2 {
+  font-weight: 300;
+}
+
+.hero-section__box > h2 > span {
+  font-weight: 700;
+}
+
+.hero-section__search > .form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.hero-section__search > .form label {
+  position: absolute;
+  left: -9999px;
+}
+
+.hero-section__search > .form input.input--text {
+  width: 50rem;
+}
+
+@media screen and (max-width: 700px) {
+  .hero-section__search > .form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    align-items: stretch;
+  }
+  .project__thumbnail {
+    height: 100%!important;
+    object-fit: cover;
+    object-position: top center;
+}
+
+  .hero-section__search > .form input.input--text,
+  .hero-section__search > .form input {
+    min-width: 100%;
+    width: 100%;
+  }
+}
+
+    
+.comment-wrap .comment-item {
+  position: relative;
+}
+.comment-wrap .comment-item .avatar {
+  position: relative;
+  z-index: 1;
+}
+.comment-wrap .comment-item:last-child .comment-line-inner {
+  background: var(--bs-light);
+  height: 20px;
+}
+.comment-wrap .comment-item-nested {
+  padding-left: 2.75rem;
+}
+.comment-wrap > .comment-item .comment-line-inner {
+  position: absolute;
+  left: 16px;
+  top: 0;
+  width: 2px;
+  background-color: var(--bs-light);
+  height: 100%;
+}
+
+.comment-item-nested .comment-item {
+  position: relative;
+}
+.comment-item-nested .comment-item .comment-line-inner {
+  position: absolute;
+  left: -28px;
+  top: 0;
+  width: 2px;
+  background-color: var(--bs-light);
+  height: 100%;
+}
+.comment-item-nested .comment-item .comment-line-inner:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 20px;
+  height: 2px;
+  width: 26px;
+  background: var(--bs-light);
+}
+
+@media (min-width: 992px) {
+  .rounded-end-lg-0 {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .rounded-start-lg-0 {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  .border-end-lg-0 {
+    border-right: 0;
+  }
+}
+.rounded-top-0 {
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+
+.rounded-bottom-0 {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+.flip-horizontal {
+  -webkit-transform: scaleX(-1);
+          transform: scaleX(-1);
+  display: inline-block;
+}
+
+.timeline {
+  width: 100%;
+}
+.timeline .timeline-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+.timeline .timeline-item:last-child {
+  margin-bottom: 0;
+}
+.timeline .timeline-item .timeline-icon {
+  margin-right: 0.8rem;
+  position: relative;
+  position: relative;
+}
+.timeline .timeline-item .timeline-content {
+  width: 100%;
+}
+.timeline .timeline-item:before {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: calc(100% - 1rem);
+  background-color: var(--bs-light);
+  top: 2.5rem;
+  left: 1.5rem;
+  -webkit-transform: translatex(-50%);
+          transform: translatex(-50%);
+}
+.timeline .timeline-item:last-child:before {
+  height: calc(100% - 2.5rem);
+}
+
+@media (min-width: 992px) {
+  .card-chat {
+    height: calc(100vh - 5.1125rem - 1.5rem);
+  }
+  .card-chat-list {
+    height: calc(100vh - 10.112rem - 1.5rem);
+  }
+  .chat-conversation-content {
+    height: calc(100% - 5.25rem);
+  }
+  .chat-tab-list {
+    height: calc(100% - 0.75rem);
+  }
+}
+.typing .dot {
+  -webkit-animation: TypingAnimation 1.8s infinite ease-in-out;
+          animation: TypingAnimation 1.8s infinite ease-in-out;
+  background-color: rgba(var(--bs-secondary-rgb), 0.7);
+  border-radius: 50%;
+  height: 7px;
+  margin-right: 4px;
+  vertical-align: middle;
+  width: 7px;
+  display: inline-block;
+}
+.typing .dot:nth-child(1) {
+  -webkit-animation-delay: 200ms;
+          animation-delay: 200ms;
+}
+.typing .dot:nth-child(2) {
+  -webkit-animation-delay: 300ms;
+          animation-delay: 300ms;
+}
+.typing .dot:nth-child(3) {
+  -webkit-animation-delay: 400ms;
+          animation-delay: 400ms;
+}
+.typing .dot:last-child {
+  margin-right: 0;
+}
+
+@-webkit-keyframes TypingAnimation {
+  0% {
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+    background-color: rgba(var(--bs-secondary-rgb), 0.7);
+  }
+  28% {
+    -webkit-transform: translateY(-7px);
+            transform: translateY(-7px);
+    background-color: rgba(var(--bs-secondary-rgb), 0.4);
+  }
+  44% {
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+    background-color: rgba(var(--bs-secondary-rgb), 0.2);
+  }
+}
+
+@keyframes TypingAnimation {
+  0% {
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+    background-color: rgba(var(--bs-secondary-rgb), 0.7);
+  }
+  28% {
+    -webkit-transform: translateY(-7px);
+            transform: translateY(-7px);
+    background-color: rgba(var(--bs-secondary-rgb), 0.4);
+  }
+  44% {
+    -webkit-transform: translateY(0px);
+            transform: translateY(0px);
+    background-color: rgba(var(--bs-secondary-rgb), 0.2);
+  }
+}
+.bi::before,
+[class^=bi-]::before,
+[class*=" bi-"]::before {
+  line-height: 1.5;
+}
+
+.fakepasswordicon {
+  height: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  cursor: pointer;
+}
+
+.fakepasswordicon.fa-eye:before {
+  content: "\f06e" !important;
+}
+
+.ticket-border {
+  border-left: 2px dashed var(--bs-gray-900);
+  padding-left: 50px;
+  position: relative;
+}
+.ticket-border:before {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #fff;
+  content: "";
+  top: -50px;
+  left: -25px;
+  position: absolute;
+}
+.ticket-border:after {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #fff;
+  content: "";
+  bottom: -50px;
+  left: -25px;
+  position: absolute;
+}
+
+@media (max-width: 575.98px) {
+  .ticket-border {
+    padding-left: 0;
+    border: 0;
+  }
+  .ticket-border:after, .ticket-border:before {
+    display: none;
+  }
+}
+.plyr--audio .plyr__controls {
+  background: transparent;
+}
+
+.plyr--audio .plyr__control.plyr__tab-focus, .plyr--audio .plyr__control:hover, .plyr--audio .plyr__control[aria-expanded=true] {
+  background: var(--bs-primary);
+}
+
+[data-autoresize] {
+  resize: none;
+}
+
+.tooltip-text-start .tooltip-inner {
+  text-align: left;
+}
+
+[class*=status-]:before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  border-radius: 100%;
+  border: 2px solid #fff;
+  height: 12px;
+  width: 12px;
+  right: -2px;
+  top: -2px;
+}
+
+.status-online:before {
+  background-color: #0cbc87;
+}
+
+.status-away:before {
+  background-color: #f7c32e;
+}
+
+.status-offline:before {
+  background-color: #d6293e;
+}
+
+.avatar.avatar-lg[class*=status-]:before {
+  right: 2px;
+  top: 2px;
+}
+
+.avatar.avatar-xl[class*=status-]:before {
+  right: 4px;
+  top: 4px;
+}
+
+.avatar.avatar-xxl[class*=status-]:before {
+  right: 12px;
+  top: 12px;
+}
+
+.avatar.avatar-xxxl[class*=status-]:before {
+  right: 18px;
+  top: 18px;
+}
+
+.avatar {
+  height: 3rem;
+  width: 3rem;
+  position: relative;
+  display: inline-block;
+  -ms-flex-negative: 0 !important;
+      flex-shrink: 0 !important;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.avatar-group {
+  padding: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+.avatar-group > li {
+  position: relative;
+}
+.avatar-group > li:not(:last-child) {
+  margin-right: -0.8rem;
+}
+.avatar-group .avatar-img {
+  border: 2px solid #fff;
+}
+
+.avatar-group-two {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  padding: 0;
+}
+.avatar-group-two > li {
+  margin-top: 0.8rem;
+  position: relative;
+}
+.avatar-group-two > li:not(:last-child) {
+  margin-right: -1.2rem;
+  margin-top: 0;
+}
+
+.avatar-group-three {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  padding: 0;
+  padding-right: 1.2rem;
+  position: relative;
+}
+.avatar-group-three > li {
+  position: relative;
+}
+.avatar-group-three > li:not(:last-child) {
+  margin-right: -1.2rem;
+}
+.avatar-group-three > li:last-child {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  top: 0;
+  -webkit-transform: translate(-50%, 50%);
+          transform: translate(-50%, 50%);
+}
+
+.avatar-group-four {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: auto auto;
+  gap: 0px 0px;
+}
+.avatar-group-four li {
+  margin: 0;
+}
+.avatar-group-four li:not(:last-child) {
+  margin: 0;
+}
+
+.avatar-xxs {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.avatar-xs {
+  height: 2.1875rem;
+  width: 2.1875rem;
+}
+
+.avatar-sm {
+  height: 2.5rem;
+  width: 2.5rem;
+}
+
+.avatar-lg {
+  height: 4rem;
+  width: 4rem;
+}
+
+.avatar-xl {
+  height: 5.125rem;
+  width: 5.125rem;
+}
+
+.avatar-xxl {
+  height: 5.125rem;
+  width: 5.125rem;
+}
+@media (min-width: 768px) {
+  .avatar-xxl {
+    width: 8rem;
+    height: 8rem;
+  }
+}
+
+.avatar-xxxl {
+  height: 8rem;
+  width: 8rem;
+}
+@media (min-width: 768px) {
+  .avatar-xxxl {
+    width: 11rem;
+    height: 11rem;
+  }
+}
+
+.avatar-story {
+  position: relative;
+  padding: 4px;
+  z-index: 1;
+}
+.avatar-story:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  border: 2px solid var(--bs-primary);
+  z-index: -1;
+}
+
+.avatar-uploader {
+  position: relative;
+}
+.avatar-uploader .avatar-edit {
+  position: absolute;
+  right: 0;
+  z-index: 1;
+  top: 0;
+}
+.avatar-uploader .avatar-edit input {
+  display: none;
+}
+.avatar-uploader .avatar-edit input + label {
+  display: inline-block;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 0;
+  border-radius: 100%;
+  background: #eff2f6;
+  border: 1px solid transparent;
+  -webkit-box-shadow: 0px 0px 20px rgba(93, 83, 84, 0.15);
+          box-shadow: 0px 0px 20px rgba(93, 83, 84, 0.15);
+  cursor: pointer;
+  font-weight: normal;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+.avatar-uploader .avatar-edit input + label:after {
+  content: "\f303";
+  font-family: "Font Awesome 6 Free";
+  color: #14191e;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-weight: 900;
+  -webkit-transform: translate(0, -56%);
+          transform: translate(0, -56%);
+  margin: 0 auto;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+.avatar-uploader .avatar-edit input + label:hover {
+  background: var(--bs-primary);
+  border-color: var(--bs-primary);
+}
+.avatar-uploader .avatar-edit input + label:hover:after {
+  color: #fff;
+}
+.avatar-uploader img#avatar-preview {
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+</style>
 {% endblock content %}
     
