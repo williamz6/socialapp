@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'phonenumber_field',
     'django.contrib.humanize',
-    'fontawesomefree'
+    'fontawesomefree',
+    'crispy_forms',
+    'crispy_bootstrap5'
 ]
 
 MIDDLEWARE = [
@@ -145,6 +147,22 @@ STATICFILES_DIRS = [
 
 MEDIA_URL='/media/'
 MEDIA_ROOT= os.path.join(BASE_DIR, 'media')
+
+# crispy forms
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# custom messages
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS= {
+    messages.DEBUG : 'alert-primary',
+    messages.INFO : 'alert-primary',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-danger',
+    messages.ERROR: 'alert-danger', 
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

@@ -1,29 +1,52 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %}{% load crispy_forms_filters %} {% load crispy_forms_tags %}
 {% block content %}
-<div class="signup">
+<div class="container">
+    <div class="auth">
+        <div class="card ">
+            <form class="form" action="{% url 'signup' %}" method="post">
+                
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-field ">
+                    
+                        
+                        {{field|as_crispy_field}}
 
-    
-    <form action="{% url 'signup' %}" method="post">
+                        {% for error in field.errors %}
+                             <p style="color: red;"> {{error}} </p>
+                        {% endfor %}
+                    
+                    </div>
+                {% endfor %}
+                
+                
+                <div>
+                    <input class="btn my-3" type="submit" value="Signup">
+                </div>
+                <div class="alternative_auth">
+                    <p>Already have an account?</p>
+                    <a href="/login">Login</a>
+                </div>
+            </form>
         
-        {% csrf_token %}
-        {% for field in form %}
-            <div class="formfield">
-            
-                <label for="#forminputtext">{{ field.label }}</label>
-                {{field}}
-            
-            </div>
-        {% endfor %}
-        
-        
-        <div>
-            <input type="submit" value="Signup">
         </div>
-        <div class="alternative_auth">
-            <p>Already have an account?</p>
-            <a href="/login">Login</a>
-        </div>
-    </form>
-
+    </div>
 </div>
+<style>
+    .auth{
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+    }
+    .auth > .card {
+    padding: 3rem 4rem;
+    width: 95%;
+    max-width: 65rem;
+    }
+    .auth__form {
+    margin: 3rem 0;
+    }
+   
+</style>
 {% endblock %}

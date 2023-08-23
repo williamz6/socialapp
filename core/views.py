@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.db.models.functions import Substr
 from django.contrib.auth import get_user_model
 from django.contrib.auth import login, logout, authenticate
-from .forms import RegisterForm
+from .forms import RegisterForm, CustomUserForm, ProfileForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import Profile, Post
@@ -122,33 +122,33 @@ def user_profiles(request):
 def userAccount(request):
     profile= request.user.profile
 
-    if request.method == 'POST':
-        if request.FILES.get('image') == None:
-            image = profile.profileimg
-            bio = request.POST['bio']
-            location = request.POST['location']
-
-            profile.profileimg = image
-            profile.bio = bio
-            profile.location = location
-            profile.save()
-        
-        if request.FILES.get('image') != None:
-            image = request.FILES.get('image')
-            bio = request.POST['bio']
-            location = request.POST['location']
-
-            profile.profileimg = image
-            profile.bio = bio
-            profile.location = location
-            profile.save()
-        return redirect('account')
-
+    
     context={
         'profile': profile,
     }
     return render(request, 'core/account.html', context)
+def editAccount(request):
+    user = request.user
+    profile= request.user.profile
 
+    user_form= CustomUserForm(instance=user)
+    profile_form= ProfileForm(instance=profile)
+
+
+    if request.method == 'POST':
+        user_form= CustomUserForm(request.POST, instance=user)
+        profile_form= ProfileForm(request.POST, request.FILES, instance= profile)
+        
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect('account')
+    context={
+        'user_form': user_form,
+        'profile_form': profile_form
+    }
+
+    return render(request, 'core/edit_account.html', context)
 @login_required
 def follow(request, username):
         user = request.user
@@ -181,18 +181,6 @@ def userProfile(request, username):
     user_post_count = user_post.count() 
     followers_list = user.followers.all()  
     following_list = user.following.all()  
-    # all_users =  User.objects.all()
-    # users_following_list = []
-    # for u in followers_list:
-    #     user_list=User.objects.get(username= u.username)
-    #     users_following_list.append(user_list)
-
-    # new_suggestions= [x for x in list(all_users) if (x not in list(users_following_list))]
-    # current_user= User.objects.filter(username=request.user.username)
-    # final_suggestion_list = [x for x in list(new_suggestions) if (x not in list(current_user))]
-    # print(new_suggestions)
-
-    # check if user is following/follower
     is_following = request.user in followers_list
 
     

@@ -3,14 +3,14 @@
 
 {% block content %}
 
-<main class="formPage my-xl">
+<main class="container">
     <div class="content-box">
         <div class="formWrapper">
              <br />
 
             <form method="POST">
                 {% csrf_token %}
-                <p>Are you sure you want to delete <span class="font-weight-bold">"{{object}}"</span>?</p>
+                <p class="fs-1 fw-bold text-black">Are you sure you want to delete <span class="font-weight-bold"><img class="ms-5 w-25 rounded mx-auto" src="{{object.imageURL}}"></a></span></p>
                 <a href="{{request.GET.next}}" class="btn btn--sub btn--md my-md" >Go Back</a>
                 <input class="btn btn--sub btn--md my-md" type="submit" value="Confirm" />
             </form>

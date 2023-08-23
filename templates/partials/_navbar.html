@@ -20,9 +20,7 @@
                 <!-- if request.user.is_authenticated -->
                 {% if request.user.is_authenticated %}
                   <ul class="navbar-nav ms-auto ">
-                    <li class="nav-item active">
-                      <a class="nav-link btn text-3xl link-dark" data-bs-toggle="modal" data-bs-target="#uploadmodal">Upload post <span class="sr-only">(current)</span></a>
-                    </li>
+                    <li  class="nav-item active">{% include 'partials/_modal.html' %}</li>
                     <li class="nav-item dropdown">
                       
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -50,35 +48,5 @@
           
         </div>
         <!-- Modal -->
-<div class="modal fade" id="uploadmodal" tabindex="-1" aria-labelledby="uploadmodalLabel"  aria-hidden="true">
-    <div class="modal-dialog" >
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Upload post</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-            <!-- <span aria-hidden="true">&times;</span> -->
-          </button>
-        </div>
-        <div class="modal-body">
-            <form action="upload" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
 
-            <div class="form-row">
-                <div class="col-md-12">
-                    <input type="file" class="form-control my-3" name="image_upload">
-
-                <textarea name="post_comment" id="post_comment" class="button soft-warning form-control my-3" placeholder="caption..." cols="30" rows="10"></textarea>
-                
-                <button class=" btn btn-primary btn-sm" type="submit"> Upload</button>
-                </div>
-            </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <div class="px-4 py-3 -mx-5 -mb-4 mt-5 border-t text-sm">
-                Your Video size Must be Maxmium 999MB
-            </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- end modal -->

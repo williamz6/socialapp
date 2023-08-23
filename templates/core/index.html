@@ -51,7 +51,7 @@
               <div>
                 <div class="nav nav-divider">
                   <h6 class="nav-item card-title mb-0"> <a href="{% url 'user_profile' post.owner.username %}" class="link-offset-2 link-underline link-underline-opacity-0 link-dark"> {{post.owner}}</a></h6>
-                  <span class="nav-item small px-2"> 2hr</span>
+                  <span class="nav-item small px-2"> {{post.created_at|naturaltime|truncatewords:2}}</span>
                 </div>
                 <!-- <p class="mb-0 small">Web Developer at Webestica</p> -->
               </div>
@@ -97,13 +97,11 @@
                                           <button  class="nav-link custom-click border-0 bg-transparent text-danger " type="submit" name="post_id" value="{{post.id}}" ><i class="fa-regular fa-heart fa-1x"></i></button>                            
                                           
                                       {% else %}
-                                          <button class="nav-link custom-click text-secondary border-0 bg-transparent " type="submit" name="post_id" value="{{post.id}}" ><i class="fa-regular fa-heart fa-1x"></i>like</button>                            
+                                          <button class="nav-link custom-click text-secondary border-0 bg-transparent " type="submit" name="post_id" value="{{post.id}}" ><i class="fa-regular fa-heart fa-1x"></i></button>                            
                                           
                                       {% endif %}
                                       </div>
-                                      <div class=" nav-link">
-                                          {{post.likesCount}} like{{post.likesCount|pluralize:"s"}}
-                                      </div>
+                                      
                                       
                                   </div>
                               </form>
@@ -111,7 +109,7 @@
             </li>
             <li class="nav-item">
               <!-- <a class="nav-link" href="#!" type="button"> <i class="fa-regular fa-comment fa-1x "></i>Comments (12)</a> -->
-                              <button  class="nav-link custom-click border-0 bg-transparent text-secondary " type="submit" name="post_id" value="{{post.id}}" ><i class="fa-regular fa-comment fa-1x "></i> Comments</button>
+                              <button  class="nav-link custom-click border-0 bg-transparent text-secondary " type="submit" name="post_id" value="{{post.id}}" ><i class="fa-regular fa-comment fa-1x "></i></button>
             </li>
             <!-- Card share action START -->
             <li class="nav-item dropdown">
@@ -130,6 +128,9 @@
             </li>
             <!-- Card share action END -->
           </ul>
+          <div class=" nav-link ms-3" style="margin-top: -1.5rem;">
+            {{post.likesCount}} like{{post.likesCount|pluralize:"s"}}
+        </div>
           <!-- Feed react END -->
 
           <!-- Add comment -->

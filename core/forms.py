@@ -3,6 +3,7 @@ from django.forms import ModelForm
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.db import transaction
+from .models import Profile
 
 User = get_user_model()
 
@@ -11,9 +12,11 @@ class RegisterForm(ModelForm):
     The default 
 
     """
-
-    password1 = forms.CharField(widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
+    
+    email = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control, fs-4'}))
+    username = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control, fs-4'}))
+    password1 = forms.CharField(label='Password',widget=forms.PasswordInput(attrs={'class':'fs-4'}))
+    password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput(attrs={'class':'fs-4'}))
 
     class Meta:
         model = User
@@ -50,3 +53,35 @@ class RegisterForm(ModelForm):
             user.save()
         return user
 
+class CustomUserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._update_field_widgets()
+
+    def _update_field_widgets(self):
+        # Update the class attribute of each field's widget
+        for name, field in self.fields.items():
+            field.widget.attrs.update({'class': 'input'})
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = [
+            'username',
+            'bio',
+            'location',
+            'profileimg'
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._update_field_widgets()
+
+    def _update_field_widgets(self):
+        # Update the class attribute of each field's widget
+        for name, field in self.fields.items():
+            field.widget.attrs.update({'class': 'input'})

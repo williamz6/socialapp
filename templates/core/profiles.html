@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load humanize %}
 {% block content %}
      <section class="hero-section text-center">
   <div class="container">
@@ -46,7 +46,7 @@
                 <div class="dev__profile">
                   <img class="avatar avatar--md" src="{{ profile.imageURL }}" alt="image" />
                   <div class="dev__meta">
-                    <h3>{{profile.bio}}</h3>
+                    <h3>{{profile.username|title}}</h3>
                         
                     
                   </div>

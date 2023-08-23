@@ -1,27 +1,52 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="signin">
 
+<div class="container">
+    <div class="auth mx-auto">
+
+        <div class="card shadow-md">
+            
+            <form  action="{% url 'login' %}" method="post" class="form">
+                
+                {% csrf_token %}
+                <div>
+                    <label class="form-label" for="email">Email</label>
+                <input class="form-control fs-3" type="text" name="email" id="" placeholder="name@xyz.com">
+                
+                </div>
+                
+                <div>
+                    <label class="form-label" for="password">Password</label>
+                        <input class="form-control fs-3" type="password" name="password" id="">
+                </div>
+                
+                
+                
+                <div>
+                    <input class="my-3 btn" type="submit" value="Signin">
+                </div>
+        
+                <div class="alternate_auth">
+                    <p>Don't have an account?</p>
+                    <a href="/signup">Signup</a>
+                </div>
+            </form>
+        </div>
     
-    <form action="" method="post">
-        
-        {% csrf_token %}
-        <label for="email">Email</label>
-        <input type="text" name="email" id="" placeholder="name@xyz.com">
-
-        <label for="password">Password</label>
-        <input type="password" name="password" id="">
-        
-        
-        <div>
-            <input type="submit" value="Signin">
-        </div>
-
-        <div class="alternate_auth">
-            <p>Don't have an account?</p>
-            <a href="/signup">Signup</a>
-        </div>
-    </form>
-
+    </div>
 </div>
+
+<style>
+    .auth{
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+    }
+    .auth > .card{
+        padding: 3rem 4rem;
+        width: 95%;
+        max-width: 65rem;
+    }
+</style>
 {% endblock %}

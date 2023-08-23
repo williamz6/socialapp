@@ -42,7 +42,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     first_name= models.CharField(max_length=50)
     last_name= models.CharField(max_length=50)
-    username= models.CharField(max_length=50, unique=True, default='username')
+    username= models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=100, unique=True)
     is_admin=models.BooleanField(default=False)
     is_staff=models.BooleanField(default=False)
@@ -90,7 +90,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Profile(models.Model):
     user= models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
-    username= models.CharField(max_length=50, unique=True, default='username')
+    username= models.CharField(max_length=50, unique=True)
     phone_number= models.CharField(max_length=12, blank=True)
     bio= models.CharField(max_length=200, default='', blank=True)
     location= models.CharField(max_length=100, blank=True)
