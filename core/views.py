@@ -18,16 +18,17 @@ User=get_user_model()
 @login_required(login_url='login')
 def index(request):
     user = request.user
-    profile= request.user.profile
+    profile = request.user.profile
     
     posts = Post.objects.annotate(short_caption=Substr('caption', 1, 50, output_field=CharField()))
     followers_list = user.followers.all()  
+    print(followers_list)
     following_list = user.following.all()
 
     all_users = User.objects.all()
     user_following_all = []
-    for user in followers_list:
-        user_list = User.objects.get(username=user.username)
+    for user_obj in followers_list:
+        user_list = User.objects.get(username=user_obj.username)
         user_following_all.append(user_list)
 
     new_suggestion_list = [x for x in list(all_users) if (x not in list(user_following_all))]
@@ -38,7 +39,10 @@ def index(request):
     username_profile_list=[]
 
     for users in suggestion_list:
+        print(type(users))
+        
         username_profile.append(users.username)
+        
 
     for username in username_profile:
         profile_lists= Profile.objects.filter(username = username)

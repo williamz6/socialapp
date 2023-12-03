@@ -1,27 +1,11 @@
-{% extends 'base.html' %}
-{% load humanize %}
-{% block content %}
-     <section class="hero-section text-center">
-  <div class="container">
-    <div class="hero-section__search">
-      <form id="searchForm" class="form" action="{% url 'profiles' %}" method="get">
-        <div class="form__field">
-          <label for="formInput#search" class="font-semibold font-size-14 lead">Search By Username </label>
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search_query" value="{{search_query}}">
-          <button class="btn btn-success btn-sm my-3" type="submit">Search</button>
-        </div>
-
-       
-      </form>
-    </div>
-  </div>
-</section>
-    <!-- {% for profile in profiles %}
+{% extends 'base.html' %} {% load humanize %} {% block content %} {% comment %}
+search {% endcomment %} {% include "partials\_search.html" %}
+<!-- {% for profile in profiles %}
 
     <div class="card mb-3 shadow-sm" style="max-width: 400px; max-height: 400px;">
         <div class="row g-0">
           <div class="col-md-4">
-            <img src="{{profile.imageURL}}" class=" img-thumbnail rounded-start" alt="...">
+            <img src="{% static '{{profile.imageURL}}' %}" class=" img-thumbnail rounded-start" alt="...">
           </div>
           <div class="col-md-8">
             <div class="card-body">
@@ -34,146 +18,151 @@
       </div>
         
     {% endfor %} -->
-    <section class="devlist">
-        <div class="container">
-        <div class="grid grid--three">
-            {% for profile in profiles %}
-        
-    
-          <div class="column card bg-light">
-            <div class="dev">
-              <a href="{% url 'user_profile' profile.username %}" class="card__body">
-                <div class="dev__profile">
-                  <img class="avatar avatar--md" src="{{ profile.imageURL }}" alt="image" />
-                  <div class="dev__meta">
-                    <h3>{{profile.username|title}}</h3>
-                        
-                    
-                  </div>
-                </div>
-                <p class="dev__info">
-                  {{profile.bio|slice:"100"}}
-                </p>
-              </a>
+<section class="devlist">
+  <div class="container">
+    <div class="grid grid--three">
+      {% for profile in profiles %}
+
+      <div class="column card bg-light">
+        <div class="dev">
+          <a
+            href="{% url 'user_profile' profile.username %}"
+            class="card__body"
+          >
+            <div class="dev__profile">
+              <img
+                class="avatar avatar--md"
+                src="{% static '{{ profile.imageURL }}' %}"
+                alt="image"
+              />
+              <div class="dev__meta">
+                <h3>{{profile.username|title}}</h3>
+              </div>
             </div>
-          </div>
-          {% endfor %}
+            <p class="dev__info">{{profile.bio|slice:"100"}}</p>
+            
+          </a>
+          <p class=" card-body">
+            <a class="tag tag--pill tag--main settings__btn" href="{% url 'inbox'%}"><i class="im im-edit"></i> Inbox</a>
+            
+          </p>
         </div>
+      </div>
+      {% endfor %}
     </div>
-    </section>
+  </div>
+</section>
 
-    <style>
-        
-        .devlist {
-        margin-top: 8rem;
-        }
+<style>
 
-        .devlist .grid {
-        align-items: stretch;
-        }
+          .devlist {
+          margin-top: 8rem;
+          }
 
-        .devlist .dev .dev__profile {
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-        }
+          .devlist .grid {
+          align-items: stretch;
+          }
 
-        .devlist .dev .dev__meta h3 {
-        color: var(--color-sub);
-        font-size: 2rem;
-        font-weight: 700;
-        }
+          .devlist .dev .dev__profile {
+          display: flex;
+          align-items: center;
+          gap: 1.5rem;
+          }
 
-        .devlist .dev .dev__meta h5 {
-        color: var(--color-text);
-        font-size: 1.4rem;
-        font-weight: 500;
-        }
+          .devlist .dev .dev__meta h3 {
+          color: var(--color-sub);
+          font-size: 2rem;
+          font-weight: 700;
+          }
 
-        .devlist .dev .dev__info {
-        margin: 1.5rem 0;
-        font-size: 1.35rem;
-        line-height: 1.4;
-        text-align: justify;
-        }
+          .devlist .dev .dev__meta h5 {
+          color: var(--color-text);
+          font-size: 1.4rem;
+          font-weight: 500;
+          }
 
-        
-.profile .card > .dev {
-  padding: 4rem;
-}
+          .devlist .dev .dev__info {
+          margin: 1.5rem 0;
+          font-size: 1.35rem;
+          line-height: 1.4;
+          text-align: justify;
+          }
 
-.dev__avatar {
-  display: block;
-  margin: auto;
-}
 
-.dev__name {
-  color: var(--color-sub);
-  font-size: 2.8rem;
-  font-weight: 700;
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
-}
+  .profile .card > .dev {
+    padding: 4rem;
+  }
 
-.dev__title {
-  font-size: 1.6rem;
-  font-weight: 500;
-  line-height: 1.3;
-}
+  .dev__avatar {
+    display: block;
+    margin: auto;
+  }
 
-.dev__location {
-  margin-top: 1rem;
-}
+  .dev__name {
+    color: var(--color-sub);
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
 
-.dev__social {
-  margin: 3rem 0;
-  list-style: none;
-  display: flex;
-  justify-content: center;
-  gap: 1.5rem;
-}
+  .dev__title {
+    font-size: 1.6rem;
+    font-weight: 500;
+    line-height: 1.3;
+  }
 
-.devInfo {
-  margin-bottom: 3rem;
-}
+  .dev__location {
+    margin-top: 1rem;
+  }
 
-.devInfo__title,
-.devInfo__subtitle {
-  font-size: 2.6rem;
-  color: var(--color-sub);
-  text-transform: uppercase;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-}
+  .dev__social {
+    margin: 3rem 0;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+  }
 
-.devInfo__subtitle {
-  font-size: 2rem;
-  color: var(--color-sub-light);
-}
+  .devInfo {
+    margin-bottom: 3rem;
+  }
 
-.devInfo__about,
-.devSkill__info {
-  font-size: 1.45rem;
-  line-height: 1.7;
-  text-align: justify;
-}
+  .devInfo__title,
+  .devInfo__subtitle {
+    font-size: 2.6rem;
+    color: var(--color-sub);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+  }
 
-.devSkill {
-  margin-bottom: 3rem;
-}
+  .devInfo__subtitle {
+    font-size: 2rem;
+    color: var(--color-sub-light);
+  }
 
-.devSkill__title {
-  font-size: 1.65rem;
-  font-weight: 500;
-  color: var(--color-sub-light);
-}
-.grid > .column {
-  color: var(--color-light);
-  text-align: center;
-  background: var(--color-main);
-}
+  .devInfo__about,
+  .devSkill__info {
+    font-size: 1.45rem;
+    line-height: 1.7;
+    text-align: justify;
+  }
 
-    </style>
-        
+  .devSkill {
+    margin-bottom: 3rem;
+  }
+
+  .devSkill__title {
+    font-size: 1.65rem;
+    font-weight: 500;
+    color: var(--color-sub-light);
+  }
+  .grid > .column {
+    color: var(--color-light);
+    {% comment %} text-align: center; {% endcomment %}
+    background: var(--color-main);
+  }
+</style>
+
 {% endblock %}
-    

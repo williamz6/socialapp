@@ -3,30 +3,9 @@
 {% block content %}
 
 <div class="container">
-<!-- 
+ <!-- search -->
 
-  <ul class="navbar-nav ">
-                  <form class="d-flex" role="search" method="get">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search_query" value="{{search_query}}">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                  </form>
-               </ul>
- -->
- <!-- Search Users -->
- <section class="hero-section text-center">
-  <div class="container">
-    <div class="hero-section__search">
-      <form id="searchForm" class="form" action="{% url 'profiles' %}" method="get">
-        <div class="form__field">
-          <label for="formInput#search" class="font-semibold font-size-14 lead">Search By Username </label>
-          <input class="input input--text" type="search" placeholder="Search" aria-label="Search" name="search_query" value="{{search_query}}">
-          <button class="btn btn-success btn-sm my-3" type="submit">Search</button>
-        </div>
-
-       
-      </form>
-    </div>
-  </div>
+{% include "partials\_search.html" %}
 </section>
   
   {% if posts %}

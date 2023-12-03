@@ -26,12 +26,15 @@ SECRET_KEY = 'django-insecure-hh#glfd!^7jsured2&r@ktj-khxl($xgtkhd7x(x++bw)#3vxr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['yourdomain.com', 'sub.yourdomain.com', '127.0.0.1']
+
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',    
     'core.apps.CoreConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,7 +47,9 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'fontawesomefree',
     'crispy_forms',
-    'crispy_bootstrap5'
+    'crispy_bootstrap5',    
+    'chatapp',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'livereload.middleware.LiveReloadScript'
+    'livereload.middleware.LiveReloadScript',
 ]
 
 ROOT_URLCONF = 'social_book.urls'
@@ -78,7 +83,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'social_book.wsgi.application'
+ASGI_APPLICATION = 'social_book.asgi.application'
 
 
 # Database
